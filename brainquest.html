@@ -1,291 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrainQuest - Quiz</title>
+    <title>Brain Quiz</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f0f0f0; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #333; margin-bottom: 20px; }
-        .hidden { display: none !important; }
-        
-        .topics { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        button { padding: 12px; border: none; cursor: pointer; font-size: 14px; border-radius: 5px; transition: 0.3s; }
-        .topic-btn { background: #4CAF50; color: white; font-weight: bold; }
-        .topic-btn:hover { background: #45a049; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(76, 175, 80, 0.4); }
-        
-        .quiz-header { display: flex; justify-content: space-between; margin-bottom: 25px; color: #666; font-size: 18px; }
-        .progress { width: 100%; height: 12px; background: #ddd; margin-bottom: 20px; border-radius: 4px; overflow: hidden; }
-        .progress-bar { height: 100%; background: #4CAF50; transition: width 0.3s; }
-        
-        .question { font-size: 24px; font-weight: bold; color: #333; margin: 25px 0; }
-        .options { display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px; }
-        .option { padding: 18px; border: 2px solid #ddd; border-radius: 5px; cursor: pointer; transition: all 0.3s; font-size: 18px; }
-        .option:hover { background: #f5f5f5; border-color: #4CAF50; transform: scale(1.03); box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3); }
-        .option.selected { background: #e8f5e9; border-color: #4CAF50; font-weight: bold; }
-        
-        @keyframes correctAnswer {
-            0% { transform: scale(1); box-shadow: 0 0 0 rgba(76, 175, 80, 0.7); }
-            50% { transform: scale(1.1); box-shadow: 0 0 25px rgba(76, 175, 80, 0.9); }
-            100% { transform: scale(1); box-shadow: 0 0 0 rgba(76, 175, 80, 0.7); }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        @keyframes wrongAnswer {
-            0%, 100% { transform: translateX(0); box-shadow: 0 0 0 rgba(244, 67, 54, 0.7); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-            50% { box-shadow: 0 0 20px rgba(244, 67, 54, 0.9); }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        
-        .option.correct { animation: correctAnswer 0.6s ease-in-out; background: #c8e6c9 !important; border-color: #4CAF50 !important; }
-        .option.wrong { animation: wrongAnswer 0.6s ease-in-out; background: #ffcdd2 !important; border-color: #f44336 !important; }
-        
-        .buttons { display: flex; gap: 10px; }
-        .btn-primary { background: #2196F3; color: white; flex: 1; }
-        .btn-primary:hover { background: #0b7dda; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4); }
-        .btn-secondary { background: #757575; color: white; flex: 1; }
-        .btn-secondary:hover { background: #616161; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(117, 117, 117, 0.4); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; }
-        
-        .results { text-align: center; }
-        .score { font-size: 64px; font-weight: bold; color: #4CAF50; margin: 40px 0; }
-        .score-msg { font-size: 24px; color: #333; margin: 30px 0; }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 90%;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .btn:hover {
+            background: #764ba2;
+        }
+        .intro-text {
+            color: #555;
+            text-align: center;
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 30px 0;
+        }
+        .question {
+            color: #555;
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .progress {
+            color: #667eea;
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .option {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .option:hover {
+            background: #f0f0f0;
+            border-color: #667eea;
+        }
+        .option input[type="radio"] {
+            margin-right: 10px;
+        }
+        .result-page {
+            text-align: center;
+        }
+        .score {
+            font-size: 48px;
+            color: #667eea;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+        .result-text {
+            font-size: 20px;
+            color: #555;
+            margin: 20px 0;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-secondary {
+            background: #999;
+        }
+        .btn-secondary:hover {
+            background: #777;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🧠 BrainQuest</h1>
-        
-        <div id="topicScreen" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px;">
-            <h2 style="text-align: center; margin-bottom: 30px; color: #666; font-size: 28px;">Choose a Topic</h2>
-            <div class="topics" style="max-width: 700px;">
-                <button class="topic-btn" onclick="startQuiz('science')" style="padding: 40px; font-size: 24px;">🔬 Science</button>
-                <button class="topic-btn" onclick="startQuiz('history')" style="padding: 40px; font-size: 24px;">📚 History</button>
-                <button class="topic-btn" onclick="startQuiz('geography')" style="padding: 40px; font-size: 24px;">🌍 Geography</button>
-                <button class="topic-btn" onclick="startQuiz('tech')" style="padding: 40px; font-size: 24px;">💻 Technology</button>
+        <div class="page active" id="homePage">
+            <h1>🧠 Brain Quiz</h1>
+            <div class="intro-text">
+                <p>Welcome to the Brain Quiz!</p>
+                <p>Test your knowledge with 3 exciting questions.</p>
+                <p>Click "Start Quiz" to begin!</p>
+            </div>
+            <button class="btn" onclick="startQuiz()">Start Quiz</button>
+        </div>
+        <div class="page" id="quizPage">
+            <h1>🧠 Brain Quiz</h1>
+            <div class="progress" id="progress">Question 1 of 3</div>
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="goHome()">Back</button>
+                <button class="btn" onclick="nextQuestion()">Next</button>
             </div>
         </div>
-
-        <div id="quizScreen" class="hidden">
-            <div class="quiz-header">
-                <span id="counter">1/10</span>
-                <span id="topicName"></span>
-            </div>
-            <div class="progress">
-                <div id="progressBar" class="progress-bar" style="width: 0%;"></div>
-            </div>
-            <div id="question" class="question"></div>
-            <div id="options" class="options"></div>
-            <div class="buttons">
-                <button class="btn-secondary" id="prevBtn" onclick="prevQuestion()" disabled>← Previous</button>
-                <button class="btn-primary" id="nextBtn" onclick="nextQuestion()">Next →</button>
-            </div>
-            <button class="btn-secondary" onclick="backToTopics()" style="width: 100%; margin-top: 15px;">← Back to Topics</button>
-        </div>
-
-        <div id="resultsScreen" class="hidden">
-            <div class="results">
-                <h2>Quiz Complete!</h2>
-                <div class="score"><span id="finalScore">0</span>/10</div>
-                <div id="scoreMsg" class="score-msg"></div>
-                <button class="topic-btn" onclick="location.reload()" style="width: 100%;">Try Again</button>
+        <div class="page" id="resultPage">
+            <h1> Quiz Complete!</h1>
+            <div class="result-page">
+                <div class="score" id="finalScore"></div>
+                <div class="result-text" id="resultMessage"></div>
+                <button class="btn" onclick="restartQuiz()">Take Quiz Again</button>
             </div>
         </div>
     </div>
-
     <script>
-        const quizzes = {
-            science: [
-                { q: "What is the chemical symbol for Gold?", opts: ["Go", "Gd", "Au", "Ag"], ans: 2 },
-                { q: "Which planet is the Red Planet?", opts: ["Venus", "Mars", "Jupiter", "Saturn"], ans: 1 },
-                { q: "What is the speed of light?", opts: ["150,000 km/s", "300,000 km/s", "450,000 km/s", "100,000 km/s"], ans: 1 },
-                { q: "How many bones in adult human body?", opts: ["186", "206", "226", "246"], ans: 1 },
-                { q: "Most abundant element in universe?", opts: ["Oxygen", "Carbon", "Hydrogen", "Nitrogen"], ans: 2 },
-                { q: "What type is a dolphin?", opts: ["Fish", "Mammal", "Reptile", "Amphibian"], ans: 1 },
-                { q: "Powerhouse of the cell?", opts: ["Nucleus", "Mitochondria", "Ribosome", "Lysosome"], ans: 1 },
-                { q: "Smallest unit of life?", opts: ["Atom", "Molecule", "Cell", "Organism"], ans: 2 },
-                { q: "Process plants make food?", opts: ["Respiration", "Photosynthesis", "Fermentation", "Digestion"], ans: 1 },
-                { q: "Most common blood type?", opts: ["A", "B", "AB", "O"], ans: 3 }
-            ],
-            history: [
-                { q: "When did World War II end?", opts: ["1943", "1944", "1945", "1946"], ans: 2 },
-                { q: "First US President?", opts: ["Jefferson", "Washington", "Adams", "Franklin"], ans: 1 },
-                { q: "Magna Carta year?", opts: ["1015", "1115", "1215", "1315"], ans: 2 },
-                { q: "Ancient wonder still standing?", opts: ["Colossus", "Great Pyramid", "Hanging Gardens", "Lighthouse"], ans: 1 },
-                { q: "Titanic sank in?", opts: ["1910", "1911", "1912", "1913"], ans: 2 },
-                { q: "Columbus discovered America?", opts: ["Vespucci", "Columbus", "Magellan", "da Gama"], ans: 1 },
-                { q: "Ancient capital of Egypt?", opts: ["Cairo", "Alexandria", "Memphis", "Luxor"], ans: 2 },
-                { q: "Berlin Wall fell in?", opts: ["1987", "1988", "1989", "1990"], ans: 2 },
-                { q: "Who wrote Declaration of Independence?", opts: ["Washington", "Jefferson", "Adams", "Franklin"], ans: 1 },
-                { q: "French Revolution year?", opts: ["1776", "1787", "1789", "1799"], ans: 2 }
-            ],
-            geography: [
-                { q: "Capital of France?", opts: ["Lyon", "Marseille", "Paris", "Nice"], ans: 2 },
-                { q: "Largest country by area?", opts: ["Canada", "USA", "Russia", "China"], ans: 2 },
-                { q: "Longest river in world?", opts: ["Amazon", "Nile", "Yangtze", "Mississippi"], ans: 1 },
-                { q: "Smallest continent?", opts: ["S. America", "Europe", "Australia", "Antarctica"], ans: 2 },
-                { q: "Capital of Japan?", opts: ["Osaka", "Tokyo", "Kyoto", "Nagasaki"], ans: 1 },
-                { q: "Highest mountain?", opts: ["K2", "Mt. Everest", "Kangchenjunga", "Lhotse"], ans: 1 },
-                { q: "Capital of Brazil?", opts: ["Rio", "São Paulo", "Brasília", "Salvador"], ans: 2 },
-                { q: "Largest desert?", opts: ["Gobi", "Kalahari", "Sahara", "Arabian"], ans: 2 },
-                { q: "Most populous country?", opts: ["India", "China", "USA", "Indonesia"], ans: 0 },
-                { q: "Deepest ocean?", opts: ["Atlantic", "Indian", "Arctic", "Pacific"], ans: 3 }
-            ],
-            tech: [
-                { q: "Father of computers?", opts: ["Turing", "Babbage", "von Neumann", "Jobs"], ans: 1 },
-                { q: "HTML stands for?", opts: ["Hyper Text Markup Language", "High Tech Modern Language", "Home Tool Markup Language", "Hyperlinks Text Markup"], ans: 0 },
-                { q: "Internet public access year?", opts: ["1989", "1991", "1993", "1995"], ans: 2 },
-                { q: "CPU stands for?", opts: ["Computer Processing Unit", "Central Processing Unit", "Central Program Unit", "Computer Program Unit"], ans: 1 },
-                { q: "Inventor of WWW?", opts: ["Tim Berners-Lee", "Vint Cerf", "Jon Postel", "Steve Berner"], ans: 0 },
-                { q: "AI stands for?", opts: ["Automated Intelligence", "Artificial Intelligence", "Advanced Internet", "Algorithm Intelligence"], ans: 1 },
-                { q: "Most used programming language?", opts: ["Java", "Python", "JavaScript", "C++"], ans: 2 },
-                { q: "API stands for?", opts: ["Application Programming Interface", "Advanced Programming", "Application Integration", "Automated Interface"], ans: 0 },
-                { q: "First iPhone release year?", opts: ["2005", "2006", "2007", "2008"], ans: 2 },
-                { q: "GPU stands for?", opts: ["Graphics Processing Unit", "General Purpose Unit", "Graphics Program Unit", "Global Processing Unit"], ans: 0 }
-            ]
-        };
-
-        let currentQuiz = [], currentIndex = 0, answers = [], attempts = [];
-
-        function startQuiz(topic) {
-            currentQuiz = quizzes[topic];
-            currentIndex = 0;
-            answers = new Array(10).fill(null);
-            attempts = new Array(10).fill(0);
-            document.getElementById('topicScreen').classList.add('hidden');
-            document.getElementById('quizScreen').classList.remove('hidden');
-            document.getElementById('topicName').textContent = topic.toUpperCase();
-            showQuestion();
+        const questions = [
+            {
+                q: "What is the capital of France?",
+                options: ["London", "Paris", "Berlin"],
+                answer: 1
+            },
+            {
+                q: "Which planet is closest to the Sun?",
+                options: ["Mercury", "Venus", "Earth"],
+                answer: 0
+            },
+            {
+                q: "What is 5 + 3?",
+                options: ["7", "8", "9"],
+                answer: 1
+            }
+        ];
+        let currentQuestion = 0;
+        let score = 0;
+        let answers = [null, null, null];
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
         }
-
-        function showQuestion() {
-            const q = currentQuiz[currentIndex];
+        function startQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            answers = [null, null, null];
+            loadQuestion();
+            showPage('quizPage');
+        }
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('progress').textContent = `Question ${currentQuestion + 1} of 3`;
             document.getElementById('question').textContent = q.q;
-            document.getElementById('counter').textContent = (currentIndex + 1) + "/10";
-            document.getElementById('progressBar').style.width = ((currentIndex + 1) * 10) + "%";
-            
-            const opts = document.getElementById('options');
-            opts.innerHTML = '';
-            q.opts.forEach((opt, i) => {
-                const btn = document.createElement('div');
-                btn.className = answers[currentIndex] === i ? 'option selected' : 'option';
-                btn.textContent = opt;
-                btn.onclick = () => selectAnswer(i);
-                opts.appendChild(btn);
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = '';
+            q.options.forEach((opt, i) => {
+                const label = document.createElement('label');
+                label.className = 'option';
+                label.innerHTML = `<input type="radio" name="answer" value="${i}" ${answers[currentQuestion] === i ? 'checked' : ''}> ${opt}`;
+                optionsDiv.appendChild(label);
             });
-            
-            document.getElementById('prevBtn').disabled = currentIndex === 0;
-            document.getElementById('nextBtn').textContent = currentIndex === 9 ? 'Finish' : 'Next →';
         }
-
-        function selectAnswer(idx) {
-            const correctIdx = currentQuiz[currentIndex].ans;
-            const options = document.querySelectorAll('.option');
-            
-            // Check if already answered correctly or used both attempts
-            if (answers[currentIndex] !== null || attempts[currentIndex] >= 2) {
+        function nextQuestion() {
+            const selected = document.querySelector('input[name="answer"]:checked');
+            if (!selected) {
+                alert('Please select an answer!');
                 return;
             }
-            
-            attempts[currentIndex]++;
-            
-            // Disable all options during animation
-            options.forEach(opt => opt.style.pointerEvents = 'none');
-            
-            // Show feedback
-            if (idx === correctIdx) {
-                answers[currentIndex] = idx;
-                options[idx].classList.add('correct');
-                
-                // Auto advance after correct answer
-                setTimeout(() => {
-                    options.forEach(opt => {
-                        opt.classList.remove('correct', 'wrong');
-                        opt.style.pointerEvents = 'auto';
-                    });
-                    
-                    if (currentIndex < 9) {
-                        currentIndex++;
-                        showQuestion();
-                    } else {
-                        showResults();
-                    }
-                }, 800);
-            } else {
-                // Wrong answer
-                options[idx].classList.add('wrong');
-                
-                setTimeout(() => {
-                    options[idx].classList.remove('wrong');
-                    options.forEach(opt => opt.style.pointerEvents = 'auto');
-                    
-                    // If this was the second attempt, move to next question
-                    if (attempts[currentIndex] >= 2) {
-                        setTimeout(() => {
-                            if (currentIndex < 9) {
-                                currentIndex++;
-                                showQuestion();
-                            } else {
-                                showResults();
-                            }
-                        }, 500);
-                    }
-                }, 800);
+            answers[currentQuestion] = parseInt(selected.value);
+            if (answers[currentQuestion] === questions[currentQuestion].answer) {
+                score++;
             }
-        }
-
-        function prevQuestion() {
-            if (currentIndex > 0) { currentIndex--; showQuestion(); }
-        }
-
-        function nextQuestion() {
-            // Allow moving to next question without requiring an answer
-            if (currentIndex < 9) { 
-                currentIndex++; 
-                showQuestion(); 
-            } else { 
-                // On last question, always show results
+            currentQuestion++;
+            if (currentQuestion < 3) {
+                loadQuestion();
+            } else {
                 showResults();
             }
         }
-
-        function backToTopics() {
-            if (confirm('Are you sure you want to go back? Your progress will be lost.')) {
-                location.reload();
-            }
-        }
-
         function showResults() {
-            let score = 0;
-            let unanswered = [];
-            
-            currentQuiz.forEach((q, i) => { 
-                if (answers[i] === q.ans) {
-                    score++;
-                } else if (answers[i] === null) {
-                    unanswered.push(i + 1); // Store question number (1-based)
-                }
-            });
-            
-            document.getElementById('quizScreen').classList.add('hidden');
-            document.getElementById('resultsScreen').classList.remove('hidden');
-            document.getElementById('finalScore').textContent = score;
-            
-            let msg = score === 10 ? '🏆 Perfect! You are a genius!' : 
-                      score >= 8 ? '🌟 Excellent! Great job!' : 
-                      score >= 6 ? '👍 Good! Keep practicing!' : 
-                      score >= 4 ? '📚 Not bad! Study more!' : '💪 Try again!';
-            
-            // Add unanswered questions info if any
-            if (unanswered.length > 0) {
-                msg += '<br><br><span style="color: #ff9800; font-size: 18px;">⚠ Unanswered Questions: ' + unanswered.join(', ') + '</span>';
-            }
-            
-            document.getElementById('scoreMsg').innerHTML = msg;
+            const percentage = (score / 3) * 100;
+            document.getElementById('finalScore').textContent = `${score}/3`;
+            let message = '';
+            if (score === 3) message = 'Perfect!';
+            else if (score === 2) message = ' Great job!';
+            else if (score === 1) message = 'Good effort!';
+            else message = 'Better luck next time!';
+            document.getElementById('resultMessage').textContent = `${message}\nYou got ${percentage}% correct`;
+            showPage('resultPage');
+        }
+        function goHome() {
+            showPage('homePage');
+        }
+        function restartQuiz() {
+            startQuiz();
         }
     </script>
 </body>
 </html>
-
